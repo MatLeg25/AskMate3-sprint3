@@ -1,0 +1,105 @@
+<<<<<<< HEAD:static/css/styleCSS_question_status.css
+body {
+    background-color: #e6f3ff;
+
+}
+
+.tags {
+    color :red;
+}
+
+.question {
+    color : #000066;
+}
+
+.answer {
+    background-color : #80c1ff;
+}
+
+.comment {
+    background-color : red;
+}
+
+button {
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 50px;
+}
+
+
+
+button:hover {
+    background-color: #00e6e6;
+}
+
+a {
+    text-decoration: none;
+    color: #3366ff;
+}
+
+/* mouse over link */
+a:hover {
+  color: mediumblue;
+}
+=======
+body {
+    background-color: #e6f3ff;
+
+}
+
+.tags {
+    color :lightslategrey;
+}
+
+.question {
+    color : #000066;
+}
+
+.answer {
+    background-color : #80c1ff;
+}
+
+.comment {
+    background-color : #cce6ff;
+}
+
+button {
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 50px;
+}
+
+
+
+button:hover {
+    background-color: #00e6e6;
+}
+
+a {
+    text-decoration: none;
+    color: #3366ff;
+}
+
+/* mouse over link */
+a:hover {
+  color: mediumblue;
+}
+
+
+>>>>>>> ddb09ddc466034675957fa85e3c4ffd4d87a5f35:static/css/styleCSS_question_status_DEMO.css

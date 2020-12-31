@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+
+{% if bad_login == True %}
+<h2> Wrong password! Try again! </h2>
+{% endif %}
+
+        <form action="{{url_for('login')}}" method="post">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" placeholder="Provide email..">
+            <br />
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" placeholder="Provide password">
+            <br />
+            <button type="submit">Login</button>
+        </form>
+
+</body>
+</html>

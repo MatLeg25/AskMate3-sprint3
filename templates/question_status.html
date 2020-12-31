@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+/* formatiowanie tabeli style CSS*/
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+        width: 10%;
+    }
+
+</style>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleCSS_question_status2.css') }}">
+{#    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleCSS_index.css') }}">#}
+
+    <meta charset="UTF-8">
+    <title>Question status</title>
+ <!-- auto refresh after 5second:   <meta http-equiv="refresh" content="5">  --->
+</head>
+<body>
+    <a href = "{{ url_for('index') }}">Go back to main menu</a>
+    <h2> See question {{ question["id"] }}</h2>
+
+    <table>
+        <tr>
+            <h5 class = "tags"><i>Tags: {{tags}} </i></h5>
+            <h3 style="display: inline" class = "question">{{ question["title"] }}</h3>
+                <h4 style="display: inline"><i>
+                    <a href ="{{  url_for('edit_question_start', question_id = question["id"]) }}">Edit</a>
+                    <a href ="{{  url_for('delete_question_start', question_id = question["id"]) }}">Delete</a>
+
+                </i></h4><br>
+        </tr><br>
+        <tr>
+            Message: <br> <b class = "question">{{ question["message"] }}</b>
+        </tr>
+
+    </table><br>
+<hr>
+{% if not ((answers[0])==Undefined) %}
+
+                        Answers: <br>
+
+                <table class = "answer">
+                <tr>
+                    <th>ID</th>
+                    <th>Submission Time</th>
+                    <th class="tekst">Message</th>
+                    <th>Vote number</th>
+                  <!--  <th>Question ID</th> -->
+                    <th>Options</th>
+                </tr>
+                </table>
+
+                {% for answer in answers %}
+                <table class = "answer">
+                    <tr >
+                    <th>{{answer["id"]}}</th>
+                    <th>{{answer["submission_time"]}}</th>
+                    <th class="tekst">{{answer["message"]}}</th>
+                    <th>{{answer["vote_number"]}} </th>
+                 <!--   <th>{{answer["question_id"]}}</th>--> <!--display table with questions-->
+                        <th><a href ="{{  url_for('edit_answer_start', answer_id = answer["id"], question_id=answer["question_id"]) }}">Edit</a>|
+                        <a href ="{{  url_for('delete_answer_start', answer_id = answer["id"],question_id=answer["question_id"]) }}">Delete</a></th>
+                    </tr>
+                </table>
+
+                    <!-- display comments for current answers -->
+                <div class="comment">
+                    {% for comment in comments %}
+                        {% if answer["id"] == comment["answer_id"]  %}
+                            <div class = "comment">
+                                &#187 {{ comment["message"] }}
+                                <a href ="{{  url_for('delete_comment', question_id=answer["question_id"], answer_id = answer["id"],comment_id=comment["id"]) }}">Delete comment</a>
+                                <br/> </div>
+                        {% endif %}
+                    {% endfor %}
+
+
+                            <!-- ADD COMMENT-->
+                                <form method = "GET" >
+                                <input type="text" name ="comment">
+                                    <input type="hidden" name="answerID" value={{ answer["id"]}}>
+                                 <input type="submit" value="Add comment">
+                                </form>
+                </div>
+                <br />
+                {% endfor %}
+
+{% else %}
+    <i>No answers yet</i> <br>
+
+{% endif %}
+
+    <br>
+<hr>
+<button type="button"><a href ="{{  url_for('add_answer', question_id = question["id"]) }}"> Post new answer to this question </a></button>
+<button type="button"><a href ="{{  url_for('add_new_tag_start', question_id = question["id"]) }}">Add new tag to question</a></button>
+</body>
+</html>
+
+

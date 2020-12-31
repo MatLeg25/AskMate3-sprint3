@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleCSS_add_question.css') }}">
+    <meta charset="UTF-8">
+    <title>Add new question</title>
+
+
+</head>
+
+    {% if option == "Add_question" %}
+        <a href = "{{ url_for('index') }}"><h1>AskMate2</h1></a>
+        <h2> Define your question</h2>
+
+            <form method="post" action="{{ url_for("add_new_question") }}">
+{#We don't want to provide ID, submission time, etc. by keyboard     #}
+{#                <label for="{{ headers[0] }} " >Question {{ headers[0] }} </label>#}
+{#            <input type="text" value="{{ question[headers[0]] }}" name ="{{ headers[0] }}" id="{{ headers[0] }}" readonly>#}
+{#            <br>#}
+{#                <label for="{{ headers[1] }} " >Question {{ headers[1] }} </label>#}
+{#            <input type="text" value="{{ question[headers[1]] }}" name ="{{ headers[1] }}" id="{{ headers[1] }}" readonly>#}
+{#            <br>#}
+{#                <label for="{{ headers[2] }} " >Question {{ headers[2] }} </label>#}
+{#            <input type="text" value="{{ question[headers[2]] }}" name ="{{ headers[2] }}" id="{{ headers[2] }}" readonly>#}
+{#            <br>#}
+{#                <label for="{{ headers[3] }} " >Question {{ headers[3] }} </label>#}
+{#            <input type="text" value="{{ question[headers[3]] }}" name ="{{ headers[3] }}" id="{{ headers[3] }}" readonly>#}
+{#            <br>#}
+                <label for="{{ headers[4] }} " >Please insert {{ headers[4] }} </label>
+            <input type="text" value="{{ question[headers[4]] }}" name ="{{ headers[4] }}" id="{{ headers[4] }}">
+            <br>
+                <label for="{{ headers[5] }} " >Please insert {{ headers[5] }} </label>
+            <input type="text" value="{{ question[headers[5]] }}" name ="{{ headers[5] }}" id="{{ headers[5] }}">
+            <br>
+                <label for="{{ headers[6] }} " >Please insert {{ headers[6] }} </label>
+            <input type="text" value="{{ question[headers[6]] }}" name ="{{ headers[6] }}" id="{{ headers[6] }}">
+            <br>
+                <input type="submit" value="Add new question">
+            </form>
+
+        {% elif option == "Edit_question" %}
+
+            <h2> Edit the question</h2>
+
+         <form method="post" action="{{ url_for("edit_question_end",question_id=question[headers[0]]) }}">
+               <label for="{{ headers[0] }} " >Question {{ headers[0] }} </label>
+            <input type="text" value="{{ question[headers[0]] }}" name ="{{ headers[0] }}" id="{{ headers[0] }}" readonly>
+            <br>
+                <label for="{{ headers[1] }} " >Question {{ headers[1] }} </label>
+            <input type="text" value="{{ question[headers[1]] }}" name ="{{ headers[1] }}" id="{{ headers[1] }}" readonly>
+            <br>
+                <label for="{{ headers[2] }} " >Question {{ headers[2] }} </label>
+            <input type="text" value="{{ question[headers[2]] }}" name ="{{ headers[2] }}" id="{{ headers[2] }}" readonly>
+            <br>
+                <label for="{{ headers[3] }} " >Question {{ headers[3] }} </label>
+            <input type="text" value="{{ question[headers[3]] }}" name ="{{ headers[3] }}" id="{{ headers[3] }}" readonly>
+            <br>
+                <label for="{{ headers[4] }} " >Please insert {{ headers[4] }} </label>
+            <input type="text" value="{{ question[headers[4]] }}" name ="{{ headers[4] }}" id="{{ headers[4] }}">
+            <br>
+                <label for="{{ headers[5] }} " >Please insert {{ headers[5] }} </label>
+            <input type="text" value="{{ question[headers[5]] }}" name ="{{ headers[5] }}" id="{{ headers[5] }}">
+            <br>
+                <label for="{{ headers[6] }} " >Please insert {{ headers[6] }} </label>
+            <input type="text" value="{{ question[headers[6]] }}" name ="{{ headers[6] }}" id="{{ headers[6] }}">
+            <br>
+                <input type="submit" value="Edit question">
+            </form>
+
+        {% elif option == "Add_answer" %}
+            <h2> Define your answer</h2>
+
+            <form method="post" action="{{ url_for("add_new_answer") }}">
+
+                <label for="{{ headers[0] }} " >Answer {{ headers[0] }} </label>
+            <input type="text" value="{{ answer[headers[0]] }}" name ="{{ headers[0] }}" id="{{ headers[0] }}" readonly>
+            <br>
+                <label for="{{ headers[1] }} " >Answer {{ headers[1] }} </label>
+            <input type="text" value="{{ answer[headers[1]] }}" name ="{{ headers[1] }}" id="{{ headers[1] }}" readonly>
+            <br>
+                <label for="{{ headers[2] }} " >Answer {{ headers[2] }} </label>
+            <input type="text" value="{{ answer[headers[2]] }}" name ="{{ headers[2] }}" id="{{ headers[2] }}" readonly>
+            <br>
+                <label for="{{ headers[3] }} " >Answer {{ headers[3] }} </label>
+            <input type="text" value="{{ answer[headers[3]] }}" name ="{{ headers[3] }}" id="{{ headers[3] }}" readonly>
+            <br>
+
+                <label for="{{ headers[4] }} " >Please insert {{ headers[4] }} </label>
+            <input type="text" value="{{ answer[headers[4]] }}" name ="{{ headers[4] }}" id="{{ headers[4] }}">
+            <br>
+                <label for="{{ headers[5] }} " >Please insert {{ headers[5] }} </label>
+            <input type="text" value="{{ answer[headers[5]] }}" name ="{{ headers[5] }}" id="{{ headers[5] }}">
+            <br>
+            <input type="submit" value="Add answer">
+            </form>
+
+        {% elif option == "Edit_answer" %}
+            <h2> Edit the answer</h2>
+
+            <form method="post" action="{{ url_for("edit_answer_end") }}">
+
+                <label for="{{ headers[0] }} " >Answer {{ headers[0] }} </label>
+            <input type="text" value="{{ answer[headers[0]] }}" name ="{{ headers[0] }}" id="{{ headers[0] }}" readonly>
+            <br>
+                <label for="{{ headers[1] }} " >Answer {{ headers[1] }} </label>
+            <input type="text" value="{{ answer[headers[1]] }}" name ="{{ headers[1] }}" id="{{ headers[1] }}" readonly>
+            <br>
+                <label for="{{ headers[2] }} " >Answer {{ headers[2] }} </label>
+            <input type="text" value="{{ answer[headers[2]] }}" name ="{{ headers[2] }}" id="{{ headers[2] }}" readonly>
+            <br>
+                <label for="{{ headers[3] }} " >Answer {{ headers[3] }} </label>
+            <input type="text" value="{{ answer[headers[3]] }}" name ="{{ headers[3] }}" id="{{ headers[3] }}" readonly>
+            <br>
+                <label for="{{ headers[4] }} " >Please insert {{ headers[4] }} </label>
+            <input type="text" value="{{ answer[headers[4]] }}" name ="{{ headers[4] }}" id="{{ headers[4] }}">
+            <br>
+                <label for="{{ headers[5] }} " >Please insert {{ headers[5] }} </label>
+            <input type="text" value="{{ answer[headers[5]] }}" name ="{{ headers[5] }}" id="{{ headers[5] }}">
+            <br>
+            <input type="submit" value="Edit answer">
+            </form>
+
+    {% endif %}
+</body>
+</html>

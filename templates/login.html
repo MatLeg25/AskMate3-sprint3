@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleCSS_index.css') }}">
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+
+    {% if register == "register" %}
+
+        <form action="{{ url_for('register') }}" method="post">
+        <label for="email">Email: </label>
+        <input type="email" name="email" id="email" placeholder="Provide email...">
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" placeholder="Provide password...">
+        <h3>Agree with terms of rules? </h3>
+        <div>
+        <input type="radio" id="Yes" name="Rules" value="Yes">
+        <label for="Yes">Yes</label>
+        <input type="radio" id="No" name="Rules" value="No" checked>
+        <label for="No">No</label>
+        </div>
+        <button type="submit">Register</button>
+        </form>
+
+    {% elif register == "is user" %}
+
+        <h3>Sorry, there is currently user with such e-mail!</h3>
+        <button type="submit"><a href="{{ url_for("index") }}">Back to main menu</a></button>
+
+
+    {% elif register == "registered" %}
+
+        <h3>Welcome in AskMate, our new user!</h3>
+        <button type="submit"><a href="{{ url_for("index") }}">Back to main menu</a></button>
+
+    {% elif register == "register_bad" %}
+        <h3>The given data is incorrect! Try again.</h3>
+        <h5 style="color:Tomato;">Hints: email must be unique, password should be at least 3 characters long.</h5>
+        <form action="{{ url_for('register') }}" method="post">
+        <label for="email">Email: </label>
+        <input type="email" name="email" id="email" placeholder="Provide email...">
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" placeholder="Provide password...">
+        <h3>Agree with terms of rules? </h3>
+        <div>
+        <input type="radio" id="Yes" name="Rules" value="Yes">
+        <label for="Yes">Yes</label>
+        <input type="radio" id="No" name="Rules" value="No" checked>
+        <label for="No">No</label>
+        </div>
+        <button type="submit">Register</button>
+        </form>
+
+
+    {% elif register == "login" %}
+
+        <form action="{{ url_for('login') }}" method="post">
+        <label for="email">Email: </label>
+        <input type="email" name="email" id="email" placeholder="Provide email...">
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" placeholder="Provide password...">
+        <button type="submit">Login</button>
+        </form>
+
+    {% elif register == "logged" %}
+
+        <h3> Hello! Welcome in AskMate! </h3>
+        <button type="submit"><a href="{{ url_for("index") }}">Back to main menu</a></button>
+
+    {% elif register == "login_bad" %}
+
+        <h3>The given data is incorrect! Try again.</h3>
+
+        <form action="{{ url_for('login') }}" method="post">
+        <label for="email">Email: </label>
+        <input type="email" name="email" id="email" placeholder="Provide email...">
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" placeholder="Provide password...">
+        <button type="submit">Login</button>
+        </form>
+
+    {% endif %}
+
+</body>
+</html>
