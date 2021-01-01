@@ -15,6 +15,7 @@ def index():  # display first site
         user_name = session['user_name']
     else:
         user_name = "!&*guest--"
+        session['user_logged'] = "user_False"
 
     #########################AM3##
     sorted = request.args.get("sorted")
@@ -31,7 +32,7 @@ def index():  # display first site
     tags = server.get_all_tags()
 
     return render_template("index.html", questions=user_questions, answers=user_answers,
-                           headers=server.Qheaders, tags=tags,user_name=user_name)  # send answer and question to index.html
+                           headers=server.Qheaders, tags=tags,user_name=user_name,user_state=session['user_logged'])  # send answer and question to index.html
 
 
 # Qheaders: id,submission_time,view_number,vote_number,title,message,image
@@ -56,6 +57,7 @@ def add_new_question():
     new_question[question_headers[3]] = "0"  # vote number
     print("Return from HTML:", new_question)
     server.add_new_question(new_question)  # send data [new_question] to python file
+    server.add_new_question_user(session["user_name"],new_question[question_headers[0]]) #AM3 - save user and his question ID in DB
     return redirect(url_for("index"))
 
 
@@ -84,12 +86,13 @@ def see_question(question_id, view_add):
     comment = request.args.get('comment')
     answer_id = request.args.get('answerID')
     if comment: #add only not empty comment
-        server.add_comments(comment,question_id,answer_id)
+        server.add_comments(comment,question_id,answer_id,session["user_name"]) # AM3 - save user and his question ID in DB
         print("NEW COMMENT", comment,"for answer ID:",answer_id)
+
     comments = server.get_comments(question_id)
 
     return render_template("question_status.html", question=question, headers=question_headers,
-                           answers=answers_to_question, tags=tags, comments=comments)
+                           answers=answers_to_question, tags=tags, comments=comments, user_state=session['user_logged'])
 
 
 @app.route('/question_status/<question_id>/new_answer')
@@ -110,6 +113,7 @@ def add_new_answer():
     print("Return from HTML:", new_answer)
     server.add_new_answer_to_file(new_answer)  # send data [new_question] to python file
     id_of_question = new_answer["question_id"]
+    server.add_new_answer_user(session["user_name"],new_answer["id"])  # AM3 - save user and his answer ID in DB
     return redirect(url_for("see_question", question_id=id_of_question, view_add=False))
 
 
@@ -217,6 +221,7 @@ def login():
 
         if valid:
             session['user_name'] = email
+            session['user_logged'] = "user_True"
             return render_template("login.html", register="logged")
             #return redirect(url_for('index'))
         return render_template('login.html', register="login_bad")
@@ -228,6 +233,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('user_name')
+    session.pop('user_logged')
     return redirect(url_for('index'))
    ###USUN  return cookie_insertion() ##AM3_cookies
 

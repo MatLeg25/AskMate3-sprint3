@@ -1,0 +1,34 @@
+--1ST QUERY
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email text NOT NULL unique,
+    password text NOT NULL
+);
+
+
+--2ND QUERY
+INSERT INTO users (email, password)
+VALUES ('admin@com','$2b$12$4ZFEEAJNr.2Dd3gHqM81uO4q/unUT73I2k4UqUxCtgNa1vtFBO4yu');
+
+
+--3RD QUERY
+CREATE TABLE user_question(
+   user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+   question_id INT NOT NULL REFERENCES question(id) ON DELETE CASCADE
+);
+
+
+--4TH QUERY
+CREATE TABLE user_answer(
+   user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+   answer_id INT NOT NULL REFERENCES answer(id) ON DELETE CASCADE
+);
+
+
+--5TH QUERY
+CREATE TABLE user_comment(
+   user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+   comment_id INT NOT NULL REFERENCES comment(id) ON DELETE CASCADE
+);
+
+--ważne: dodać w POSTGRES jako ONWERA użytkownika z AskMate3!

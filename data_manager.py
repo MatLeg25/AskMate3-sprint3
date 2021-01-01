@@ -232,20 +232,59 @@ def get_user_by_email(cursor: RealDictCursor, user_email) -> str:
 def add_user_to_db(cursor: RealDictCursor,add_user) -> list:
     #SQL query
     query = """
-    INSERT INTO users(email,password,questions,answers,comments,permission_level)
-    VALUES (%s,%s,%s,%s,%s,%s);
+    INSERT INTO users(email,password)
+    VALUES (%s,%s);
         """
     #Python data
     query_values = (
     add_user["email"],
     add_user["password"],
-    add_user["questions"],
-    add_user["answers"],
-    add_user["comments"],
-    add_user["permission_level"]
     )
     #insert into SQL database by SQL query filled with Python data
     cursor.execute(query, query_values)
 
-##new_user = {'email':'test@com','password':'$2b$12$t3Jp5AhKyEOhm/.ha3Sy5Oa30iyytzTybMB/vGhMRp6AGuuDN35Xy','questions':'{}','answers':'{}','comments':'{}','permission_level':1} ##
-##add_user(new_user) ##
+@database_common.connection_handler
+def add_user_question(cursor: RealDictCursor,user_id,question_id) -> int:
+    #SQL query
+    query = """
+    INSERT INTO user_question(user_id,question_id)
+    VALUES (%s,%s);
+        """
+    #Python data
+    query_values = (
+    user_id,
+    question_id,
+    )
+    #insert into SQL database by SQL query filled with Python data
+    cursor.execute(query, query_values)
+
+@database_common.connection_handler
+def add_user_answer(cursor: RealDictCursor,user_id,answer_id) -> int:
+    #SQL query
+    query = """
+    INSERT INTO user_answer(user_id,answer_id)
+    VALUES (%s,%s);
+        """
+    #Python data
+    query_values = (
+    user_id,
+    answer_id,
+    )
+    #insert into SQL database by SQL query filled with Python data
+    cursor.execute(query, query_values)
+
+@database_common.connection_handler
+def add_user_comment(cursor: RealDictCursor,user_id,comment_id) -> int:
+    #SQL query
+    query = """
+    INSERT INTO user_comment(user_id,comment_id)
+    VALUES (%s,%s);
+        """
+    #Python data
+    query_values = (
+    user_id,
+    comment_id,
+    )
+    print(user_id,comment_id)
+    #insert into SQL database by SQL query filled with Python data
+    cursor.execute(query, query_values)

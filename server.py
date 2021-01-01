@@ -235,11 +235,10 @@ def update_tag(tag):
     data_manager.update_tags(tag)
 
 
-def add_comments(comment,question_id,answer_id):  # to be updated for user data
+def add_comments(comment,question_id,answer_id,user_email):  # to be updated for user data
     new_comment = [(question_id), (answer_id), comment, get_submission_time()]
-    #print("NOWYY komentarz",new_comment)
     data_manager.add_comment(new_comment)
-
+    add_new_comment_user(new_comment,user_email)
 
 def get_comments(question_id):
     all_comments = data_manager.get_comments()
@@ -285,10 +284,7 @@ def add_new_user(email, password):
     add_user = {
         "email": email,
         "password":hash_password(password),
-        "questions":"{}",
-        "answers":"{}",
-        "comments":"{}",
-        "permission_level":1
+       # "permission_level":1
     }
 
     data_manager.add_user_to_db(add_user)
@@ -299,3 +295,41 @@ def hash_password(password):
     salt = bcrypt.gensalt()  # generate salt - provide unique passwords for each user
     user_password = bcrypt.hashpw(password, salt)  # generate unique passwords
     return user_password.decode() #decode -  do DB encode password
+
+
+def add_new_question_user(user_email,question_id):
+    user = data_manager.get_user_by_email(user_email)
+    user_id = user[0]["id"]
+    data_manager.add_user_question(user_id,question_id)
+    print("User: ",user_email," add new question with ID",question_id)
+
+def add_new_answer_user(user_email,answer_id):
+    user = data_manager.get_user_by_email(user_email)
+    user_id = user[0]["id"]
+    data_manager.add_user_answer(user_id,answer_id)
+    print("User: ",user_email," add new answer with ID",answer_id)
+
+
+def get_comment_id(new_comment):
+
+    question_id = new_comment[0]
+    answer_id = new_comment[1]
+    comment = new_comment[2]
+    sent_time = new_comment[3] #format daty!! dorobic poeownianie czasowe tez
+
+    comments_for_question = get_comments(question_id)
+    for single_comment in comments_for_question:
+        print("DOROBIC!! + czas=> Porównanie: ", single_comment, "VS", new_comment)
+        if single_comment["question_id"] == int(question_id) and single_comment["answer_id"] == int(answer_id) and single_comment["message"] == comment: # and single_comment["submission_time"] == sent_time:
+            print("Comment ID =",single_comment["id"])
+            return single_comment["id"]
+    return None
+
+def add_new_comment_user(new_comment,user_email):
+    user = data_manager.get_user_by_email(user_email)
+    user_id = user[0]["id"]
+
+    comment_id = get_comment_id(new_comment)
+
+    data_manager.add_user_comment(user_id,comment_id)
+    print("User: ",user_email," add new comment with ID",comment_id)

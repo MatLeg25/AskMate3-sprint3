@@ -30,9 +30,10 @@ th, td {
             <h5 class = "tags"><i>Tags: {{tags}} </i></h5>
             <h3 style="display: inline" class = "question">{{ question["title"] }}</h3>
                 <h4 style="display: inline"><i>
+                    <div class ={{ user_state }}> <!--Display DIV below only for logged user -->
                     <a href ="{{  url_for('edit_question_start', question_id = question["id"]) }}">Edit</a>
                     <a href ="{{  url_for('delete_question_start', question_id = question["id"]) }}">Delete</a>
-
+                    </div>
                 </i></h4><br>
         </tr><br>
         <tr>
@@ -52,20 +53,25 @@ th, td {
                     <th class="tekst">Message</th>
                     <th>Vote number</th>
                   <!--  <th>Question ID</th> -->
-                    <th>Options</th>
+                    <th><div class ={{ user_state }}> <!--Display DIV below only for logged user -->
+                        Options
+                    </div></th>
                 </tr>
                 </table>
 
                 {% for answer in answers %}
                 <table class = "answer">
-                    <tr >
+                    <th >
                     <th>{{answer["id"]}}</th>
                     <th>{{answer["submission_time"]}}</th>
                     <th class="tekst">{{answer["message"]}}</th>
                     <th>{{answer["vote_number"]}} </th>
                  <!--   <th>{{answer["question_id"]}}</th>--> <!--display table with questions-->
-                        <th><a href ="{{  url_for('edit_answer_start', answer_id = answer["id"], question_id=answer["question_id"]) }}">Edit</a>|
-                        <a href ="{{  url_for('delete_answer_start', answer_id = answer["id"],question_id=answer["question_id"]) }}">Delete</a></th>
+
+                            <th><div class ={{ user_state }}> <!--Display DIV below only for logged user -->
+                            <a href ="{{  url_for('edit_answer_start', answer_id = answer["id"], question_id=answer["question_id"]) }}">Edit</a>|
+                            <a href ="{{  url_for('delete_answer_start', answer_id = answer["id"],question_id=answer["question_id"]) }}">Delete</a>
+                        </div></th>
                     </tr>
                 </table>
 
@@ -75,18 +81,21 @@ th, td {
                         {% if answer["id"] == comment["answer_id"]  %}
                             <div class = "comment">
                                 &#187 {{ comment["message"] }}
-                                <a href ="{{  url_for('delete_comment', question_id=answer["question_id"], answer_id = answer["id"],comment_id=comment["id"]) }}">Delete comment</a>
-                                <br/> </div>
+                                    <div class ={{ user_state }}> <!--Display DIV below only for logged user -->
+                                    <a href ="{{  url_for('delete_comment', question_id=answer["question_id"], answer_id = answer["id"],comment_id=comment["id"]) }}">Delete comment</a>
+                                    </div>
+                                    <br/> </div>
                         {% endif %}
                     {% endfor %}
 
-
+                                <div class ={{ user_state }}> <!--Display DIV below only for logged user -->
                             <!-- ADD COMMENT-->
                                 <form method = "GET" >
                                 <input type="text" name ="comment">
                                     <input type="hidden" name="answerID" value={{ answer["id"]}}>
                                  <input type="submit" value="Add comment">
                                 </form>
+                                </div>
                 </div>
                 <br />
                 {% endfor %}
@@ -98,8 +107,10 @@ th, td {
 
     <br>
 <hr>
+    <div class ={{ user_state }}> <!--Display DIV below only for logged user -->
 <button type="button"><a href ="{{  url_for('add_answer', question_id = question["id"]) }}"> Post new answer to this question </a></button>
 <button type="button"><a href ="{{  url_for('add_new_tag_start', question_id = question["id"]) }}">Add new tag to question</a></button>
+    </div>
 </body>
 </html>
 

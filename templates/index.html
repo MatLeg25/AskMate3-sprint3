@@ -96,8 +96,10 @@ th, td {
     {% endfor %}
 
 <br><br>
+    <div class ={{ user_state }}> <!--Display DIV below only for logged user -->
     <a href = "{{ url_for("add_question") }}">Add new question</a> <!-- przekierowanie do wskazanego pliku HTML, url_for to bezpieczniejszy sposób niz sztywny adres -->
-<br />
+    </div>
+    <br />
 
 
 </body>
