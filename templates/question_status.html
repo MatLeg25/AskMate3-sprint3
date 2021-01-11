@@ -22,21 +22,40 @@ th, td {
  <!-- auto refresh after 5second:   <meta http-equiv="refresh" content="5">  --->
 </head>
 <body>
-    <a href = "{{ url_for('index') }}">Go back to main menu</a>
-    <h2> See question {{ question["id"] }}</h2>
+    <a href = "{{ url_for('index') }}"><h1>AskMate2</h1></a>
+    <button class="center" type="button"><a href="{{ url_for("index") }}">Back to main menu</a></button>
+{#    <h2> Question {{ question["id"] }}: </h2> #}
+
+    <br />
 
     <table>
         <tr>
             <h5 class = "tags"><i>Tags: {{tags}} </i></h5>
             <h3 style="display: inline" class = "question">{{ question["title"] }}</h3>
+
+            {% if authors[0]["author_email"] == user or user == "admin@com"%} <!-- if viewer is author/admin allow edit/delte -->
                 <h4 style="display: inline"><i>
-                    <div class ={{ user_state }}> <!--Display DIV below only for logged user -->
                     <a href ="{{  url_for('edit_question_start', question_id = question["id"]) }}">Edit</a>
                     <a href ="{{  url_for('delete_question_start', question_id = question["id"]) }}">Delete</a>
-                    </div>
                 </i></h4><br>
-        </tr><br>
+            {% elif user != "default_user" %} <!-- LOGGED user but NOT AUTHOR can vote question-->
+                &emsp; <!-- put 4spaces -->
+                <!-- link by image - reputation UP -->
+                <a href ="{{  url_for('question_vote', question_id=question["id"], question_vote=1) }}">
+                    <img src={{ url_for('static', filename='icon/reputationUP.png') }} alt="+" style="width:38px;height:38px;">
+                </a>
+                               <b> {{question["vote_number"]}} </b>
+                <!-- link by image - reputation DOWN -->
+                <a href ="{{  url_for('question_vote', question_id=question["id"], question_vote=-1) }}">
+                    <img src={{ url_for('static', filename='icon/reputationDOWN.png') }} alt="-" style="width:38px;height:38px;">
+                </a>
+            {% endif %}
+
+        </tr><br><br>
         <tr>
+            Posted by: <b>{{ authors[0]["author_email"] }}</b><br>
+        </tr>
+        <tr><br>
             Message: <br> <b class = "question">{{ question["message"] }}</b>
         </tr>
 
@@ -50,52 +69,116 @@ th, td {
                 <tr>
                     <th>ID</th>
                     <th>Submission Time</th>
-                    <th class="tekst">Message</th>
+                    <th class="ans_mes">Message</th>
                     <th>Vote number</th>
-                  <!--  <th>Question ID</th> -->
-                    <th><div class ={{ user_state }}> <!--Display DIV below only for logged user -->
-                        Options
-                    </div></th>
+                    <th>Author</th>
+                    <th>Options</th>
+                    <th>Status</th>
                 </tr>
                 </table>
 
                 {% for answer in answers %}
                 <table class = "answer">
-                    <th >
+                    <tr>
                     <th>{{answer["id"]}}</th>
                     <th>{{answer["submission_time"]}}</th>
-                    <th class="tekst">{{answer["message"]}}</th>
-                    <th>{{answer["vote_number"]}} </th>
-                 <!--   <th>{{answer["question_id"]}}</th>--> <!--display table with questions-->
+                    <th class="ans_mes">{{answer["message"]}}</th>
+                    <th>
+                           {% set count = namespace(value=0) %}
+                           {% for answer_author in authors[1] %}
+                               {% if (answer_author["answer_id"] == answer["id"]) and not (answer_author["author_email"] == user or user=="default_user") %} <!--Only logged and not author of answer can vote answer-->
+                                   {% set count.value = count.value + 1 %}
+                                   <!-- link by image - reputation UP -->
+                                    <a href ="{{  url_for('answer_vote', answer_id = answer["id"],question_id=answer["question_id"], answer_vote=1) }}">
+                                    <img src={{ url_for('static', filename='icon/reputationUP.png') }} alt="+" style="width:38px;height:38px;">
+                                    </a>
+                                {{answer["vote_number"]}}
+                                    <!-- link by image - reputation DOWN -->
+                                    <a href ="{{  url_for('answer_vote', answer_id = answer["id"],question_id=answer["question_id"], answer_vote=-1) }}">
+                                            <img src={{ url_for('static', filename='icon/reputationDOWN.png') }} alt="-" style="width:38px;height:38px;">
+                                    </a>
+                                {% elif loop.last and count.value == 0 %} <!-- the last loop and IF with  user and answer authors was not True any time  -->
+                                    {{answer["vote_number"]}} <!--ELIF conditions used to put only one value in column-->
+                               {% endif %}
+                           {% endfor %}
+                    </th>
 
-                            <th><div class ={{ user_state }}> <!--Display DIV below only for logged user -->
-                            <a href ="{{  url_for('edit_answer_start', answer_id = answer["id"], question_id=answer["question_id"]) }}">Edit</a>|
-                            <a href ="{{  url_for('delete_answer_start', answer_id = answer["id"],question_id=answer["question_id"]) }}">Delete</a>
-                        </div></th>
+                    <!--DISPLAY AUTHOR of answer -->
+                    <th>{%  for answer_author in authors[1] %}
+                            {% if  answer_author["answer_id"] == answer["id"] %}
+                                {{ answer_author["author_email"] }}
+                            {% endif %}
+                        {% endfor %}</th>
+
+                        <!-- DISPLAY OPTIONS in dependence of logged user -->
+                        {% set count = namespace(value=0) %}
+                        {% for answer_author in authors[1] %} <!-- if viewer is author/admin allow edit/delte -->
+                            {% if (answer_author["answer_id"]==answer["id"]) and (answer_author["author_email"] == user or user == "admin@com")%}
+                                {% set count.value = count.value + 1 %}
+                                <th>
+                                |<a href ="{{  url_for('edit_answer_start', answer_id = answer["id"], question_id=answer["question_id"]) }}">Edit</a>|<br />
+                                |<a href ="{{  url_for('delete_answer_start', answer_id = answer["id"],question_id=answer["question_id"]) }}">Delete</a>|<br />
+                            {% endif %}
+                            <!-- loop.last in IF conditions used to put only one value in column -->
+                            {% if loop.last and (authors[0]["author_email"] == user or user == "admin@com")%} <!--extra option: Only author of question and admin can accept answer-->
+                                {% if count.value == 0 %} <th> {% endif %} <!--open th cell if has not been opened yet (before if)--->
+                                {% set count.value = count.value + 1 %}
+                                |<a href ="{{  url_for('set_answer_status', answer_id = answer["id"],question_id=answer["question_id"], answer_status="Accepted") }}">OK</a>
+                                / <a href ="{{  url_for('set_answer_status', answer_id = answer["id"],question_id=answer["question_id"], answer_status="Rejected") }}">NOK</a>|
+                                </th>
+                            {% endif %}
+                        {% endfor %}
+                        <!--IF above conditions (2IF) not followed - put this option-->
+                        {% if count.value == 0  %}
+                            <th>View only </th>
+                        {% endif %}
+
+                    <!--DISPLAY STATUS-->
+                        {% for ans_stat in answer_status %}
+                            {% if ans_stat["answer_id"] == answer["id"] %}
+                                <th>
+                                <div class = {{ ans_stat["answer_status"] }}> <!--styleCSS class this same as value for key "answer_status" -->
+                                    {{ ans_stat["answer_status"] }}
+                                </div>
+                                </th>
+                            {% endif %}
+                        {% endfor %}
+
                     </tr>
                 </table>
 
                     <!-- display comments for current answers -->
-                <div class="comment">
-                    {% for comment in comments %}
-                        {% if answer["id"] == comment["answer_id"]  %}
-                            <div class = "comment">
-                                &#187 {{ comment["message"] }}
-                                    <div class ={{ user_state }}> <!--Display DIV below only for logged user -->
-                                    <a href ="{{  url_for('delete_comment', question_id=answer["question_id"], answer_id = answer["id"],comment_id=comment["id"]) }}">Delete comment</a>
-                                    </div>
-                                    <br/> </div>
-                        {% endif %}
-                    {% endfor %}
+                    <div class="comment">
+                        {% for comment in comments %}
+                            {% if answer["id"] == comment["answer_id"]  %}
+                                <div class = "comment">
+                                    &#187 {{ comment["message"] }}
+                                        [Author:
+                                        {%  for comment_author in authors[2] %}
+                                            {% if  comment_author["comment_id"] == comment["id"] %}
+                                                {{ comment_author["author_email"] }}
+                                            {% endif %}
+                                        {% endfor %}
+                                     , posted: {{ comment["submission_time"] }}]
 
-                                <div class ={{ user_state }}> <!--Display DIV below only for logged user -->
+                                {% for comment_author in authors[2] %}
+                                    {% if (comment_author["comment_id"]==comment["id"]) and (comment_author["author_email"] == user or user == "admin@com")%} <!-- if viewer is author/admin allow edit/delte -->
+                                        <a href ="{{  url_for('delete_comment', question_id=answer["question_id"], answer_id = answer["id"],comment_id=comment["id"]) }}">Delete comment</a>
+                                    {% endif %}
+                                {% endfor %}
+                                    <br/> </div>
+                            {% endif %}
+                        {% endfor %}
+
+
+                    {% if user != "default_user" %}
                             <!-- ADD COMMENT-->
                                 <form method = "GET" >
+                                <input type="submit" value="Add comment">
                                 <input type="text" name ="comment">
                                     <input type="hidden" name="answerID" value={{ answer["id"]}}>
-                                 <input type="submit" value="Add comment">
                                 </form>
-                                </div>
+                    {% endif %}
                 </div>
                 <br />
                 {% endfor %}
@@ -107,10 +190,11 @@ th, td {
 
     <br>
 <hr>
-    <div class ={{ user_state }}> <!--Display DIV below only for logged user -->
+{% if user != "default_user" %}
 <button type="button"><a href ="{{  url_for('add_answer', question_id = question["id"]) }}"> Post new answer to this question </a></button>
 <button type="button"><a href ="{{  url_for('add_new_tag_start', question_id = question["id"]) }}">Add new tag to question</a></button>
-    </div>
+{% endif %}
+
 </body>
 </html>
 

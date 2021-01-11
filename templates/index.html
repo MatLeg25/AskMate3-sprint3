@@ -1,67 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<style>
-/* formatiowanie tabeli style CSS*/
-table {
-    border: 1px solid black;
-    border-collapse: collapse;
-    width: 100%;
-}
-th, td {
-        width: 10%;
-    }
+    <style>
+        /* formatiowanie tabeli style CSS*/
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-</style>
+        th, td {
+            width: 10%;
+        }
+
+    </style>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styleCSS_index.css') }}">
     <meta charset="UTF-8">
     <title>Ask mate</title>
 </head>
 <body>
-    <h1>AskMate2</h1>
+<h1>AskMate3</h1>
+{% if user == "default_user" %}
+    <h3>Welcome in Ask Mate!!!</h3>
+    <button type="button"><a href="{{ url_for("login") }}">Login</a></button>
+    <button type="button"><a href="{{ url_for("register") }}">Register</a></button>
+{% else %}
+    <h3>Hello {{ user }}!!</h3>
+    <button type="button"><a href="{{ url_for("logout") }}">Logout</a></button>
+    <button type="button"><a href="{{ url_for("list_users") }}">See users here</a></button>
+    <button type="button"><a href="{{ url_for("user_page", user_id = user_id) }}">See your user page</a></button>
+{% endif %}
 
-    <!--AM3 cookies TESTY-->
-        <div id="AM3_cookies" style="background-color:deepskyblue;text-align:right"><a href = "{{ url_for("cookie_insertion") }}">ADD_cookies |</a>
-                                <a href = "{{ url_for("cookie_delete") }}">DEL_cookies</a></div>
-
-        <div id = "login_panel">
-        {% if user_name == "!&*guest--" %}
-            <h3 id = "hello_guest"> Hello unknown user! </h3>
-                <button type="button"><a href = "{{ url_for("login") }}">Login</a></button>
-                <button type="button"><a href = "{{ url_for("register") }}">Register</a></button>
-        {% else %}
-            <h3 id = "hello_user"> Hello, {{ user_name }} !</h3>
-            <button type="button"><a href = "{{ url_for("logout") }}"> LOGOUT </a></button>
-        {% endif %}
-    </div>
-
-
-
-    <h2> Please find below questions</h2>
+<form method=" GET">
+    <br><br>
+    <input type="text" name="search">
+    <input type="submit" value="Search question message">
+</form>
+<h2> Please find questions below</h2>
 
 
-    <form method = "GET" action ={{ url_for("index") }}>
-        <label>Sorting by</label>
-        <select name="sorted" id="sorted">
-            {% for header in headers[:5] %}
-                <option value="{{ header }}">{{ header}}</option>
-            {% endfor %}
-        </select>
+<form method="GET" action={{ url_for("index") }}>
+    <label>Sorting by</label>
+    <select name="sorted" id="sorted">
+        {% for header in headers[:5] %}
+            <option value="{{ header }}">{{ header }}</option>
+        {% endfor %}
+    </select>
 
-        <label>Sorting order</label>
-        <select name="order" id="order">
-            <option value="asc">ascending</option>
-            <option value="desc">descending</option>
-        </select>
+    <label>Sorting order</label>
+    <select name="order" id="order">
+        <option value="asc">ascending</option>
+        <option value="desc">descending</option>
+    </select>
 
-         <input type="submit" value="Sort">
-    </form>
+    <input type="submit" value="Sort">
+</form>
 
 {#    <a href = "{{"/?sorted=Sorting by&order=Sorting order"}}"> Sort data </a>#}
 
-    <br><br>
+<br><br>
 
-    <table>
+<table>
     <tr>
         <th>ID</th>
         <th>Submission Time</th>
@@ -71,35 +70,37 @@ th, td {
         <th>Vote number</th>
 
     </tr>
-    </table>
+</table>
 
-    {% for quest in questions %}
+{% for quest in questions %}
     <table>
         <tr>
-            <th>{{quest["id"]}}</th>
-            <th> {{quest["submission_time"]}}</th>
+            <th>{{ quest["id"] }}</th>
+            <th> {{ quest["submission_time"] }}</th>
             <th>
-                <button type="button"><a href = "{{ url_for("see_question", question_id = quest["id"], view_add=True) }}"> {{quest["title"]}} </a></button>
+                <button type="button"><a
+                        href="{{ url_for("see_question", question_id = quest["id"], view_add=True) }}"> {{ quest["title"] }} </a>
+                </button>
             </th>
             <th>
-            <!-- display tags for current questions -->
+                <!-- display tags for current questions -->
                 {% for tag in tags %}
-                    {% if quest["id"] == tag["question_id"]  %}
-                         {{ tag["name"] }},
+                    {% if quest["id"] == tag["question_id"] %}
+                    <a href =" {{  url_for("display_by_tag", tag_name=tag["name"]) }} "> {{ tag["name"] }} </a>,
                     {% endif %}
                 {% endfor %}
             </th>
-            <th>{{quest["view_number"]}} </th>
-            <th>{{quest["vote_number"]}}</th> <!--display table with questions-->
+            <th>{{ quest["view_number"] }} </th>
+            <th>{{ quest["vote_number"] }}</th> <!--display table with questions-->
         </tr>
     </table>
-    {% endfor %}
+{% endfor %}
 
 <br><br>
-    <div class ={{ user_state }}> <!--Display DIV below only for logged user -->
-    <a href = "{{ url_for("add_question") }}">Add new question</a> <!-- przekierowanie do wskazanego pliku HTML, url_for to bezpieczniejszy sposób niz sztywny adres -->
-    </div>
-    <br />
+{% if user != 'default_user' %}
+    <button type="button"><a href="{{ url_for("add_question") }}">Add new question</a></button>
+    <!-- przekierowanie do wskazanego pliku HTML, url_for to bezpieczniejszy sposób niz sztywny adres -->
+{% endif %}
 
 
 </body>

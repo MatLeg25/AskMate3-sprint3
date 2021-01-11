@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Searched questions</title>
+</head>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styleCSS_user_list.css') }}">
+<body>
+<h1>Your search results: </h1>
+<table class="center">
+    <tr>
+        <th>
+            <h2>Title of your question</h2>
+        </th>
+        <th>
+            <h2>Message of your question</h2>
+        </th>
+    </tr>
+    {% for question in questions %}
+        <tr>
+            <td>
+                {{ question["title"] }}
+            </td>
+            <td>
+                <button class="center" type="button"><a
+                        href="{{ url_for("see_question",question_id = question["id"], view_add = True) }}">
+                    {% if question_to_search in question.message %} <!--question.message = question["message"] -->
+                    {# Style editing inside python variable!! IMPORTANT SOLUTION #}
+                        {{ question["message"].replace(question_to_search, '<span style="background-color: red;">{}</span>'.format(question_to_search)) | safe }}
+                        </a>
+                    {% endif %}
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+<br><br>
+<button class="center" type="button"><a href="{{ url_for("index") }}">Back to main menu</a></button>
+
+</body>
+</html>

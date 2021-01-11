@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* formatiowanie tabeli style CSS*/
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            width: 10%;
+        }
+
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleCSS_index.css') }}">
+    <meta charset="UTF-8">
+    <title>Ask mate</title>
+</head>
+<body>
+
+<h2> Please find questions below for tag {{ tag }}</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Submission Time</th>
+        <th>Title</th>
+        <th>Tag</th>
+        <th>View number</th>
+        <th>Vote number</th>
+
+    </tr>
+</table>
+
+{% for quest in questions %}
+    <table>
+        <tr>
+            <th>{{ quest["question_id"] }}</th>
+            <th> {{ quest["submission_time"] }}</th>
+            <th>
+                <button type="button"><a
+                        href="{{ url_for("see_question", question_id = quest["question_id"], view_add=True) }}"> {{ quest["title"] }} </a>
+                </button>
+            </th>
+            <th>
+                <!-- display tag for current questions -->
+                    {{ tag }}
+            </th>
+            <th>{{ quest["view_number"] }} </th>
+            <th>{{ quest["vote_number"] }}</th> <!--display table with questions-->
+        </tr>
+    </table>
+{% endfor %}
+
+<br><br>
+
+    <button type="button"><a href="{{ url_for("index") }}">Back to main page</a></button>
+
+</body>
+</html>

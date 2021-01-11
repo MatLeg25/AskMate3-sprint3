@@ -1,9 +1,15 @@
 h2 {
-    color: #117b7c;
+    color: #2e4e46;
     font-family: Arial;
     font-size: 50px;
     letter-spacing: 5px;
 
+}
+
+h3 {
+    color: #2e4e46;
+    font-size: 50px;
+    letter-spacing: 5px;
 }
 
 input[type="submit"] {
@@ -18,14 +24,25 @@ input[type="submit"] {
 
 input[type="text"] {
     font-style: italic;
-    font-size: 18px;
+    width: 60%;
+    height: 25px;
+
+
+/*     font-size: 18px; */
+
+}
+
+b {
+    color: #050505;
+    font-size: 20px;
+    letter-spacing: 1px;
+    font-style: italic;
+
 
 }
 
 body {
-
     background-color: #cccccc;
-
 }
 
 th {
@@ -35,7 +52,7 @@ th {
     text-align: center;
     font-family: Arial;
     font-size: 18px;
-    padding: 10px;
+    padding: 5px;
     letter-spacing: 5px;
 }
 
@@ -81,22 +98,35 @@ h1{
 }
 
 
-.answer .tekst {
-    width: 30%;
-}
-
 .comment {
-    color: #efecec;
+    color: #050505;
     font-size: 1.2rem;
-    padding-left: 5%;
-    padding-bottom: 2px;
-    background-color:#5cd6d6;
+    padding: 8px;
+    background-color:#5cd6d605;
 }
 
-.user_True {
 
+.ans_mes {
+    width:20%;
 }
 
-.user_False {
-    display: none;
+.Accepted {
+    background-color: greenyellow;
+    padding: 10px;
+    text-align: center;
+    !important;
+}
+
+.Rejected {
+    background-color: red;
+    padding: 10px;
+    text-align: center;
+    !important;
+}
+
+.None {
+    background-color: orange;
+    padding: 10px;
+    text-align: center;
+    !important;
 }

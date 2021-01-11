@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styleCSS_user_list.css') }}">
+<head>
+    <meta charset="UTF-8">
+    <title>User page</title>
+</head>
+<body>
+<h2>This is {{ user_data["login"] }} page </h2>
+<table class="center">
+    <tr>
+        <th><h3>User id</h3></th>
+        <th><h3>User login</h3></th>
+        <th><h3>Date of register</h3></th>
+        <th><h3>Amount of questions</h3></th>
+        <th><h3>Amount of answers</h3></th>
+        <th><h3>Amount of comments</h3></th>
+        <th><h3>User reputation</h3></th>
+    </tr>
+    <tr>
+        <th>
+            <h4>{{ user_data["id"] }}</h4>
+        </th>
+        <th>
+            <h4>{{ user_data["login"] }}</h4>
+        </th>
+        <th>
+            <h4>{{ user_data["registered"] }}</h4>
+        </th>
+        <th>
+            <h4> {{ user_question_amount["count"] }}</h4>
+        </th>
+        <th>
+            <h4> {{ user_answer_amount["count"] }}</h4>
+        </th>
+        <th>
+            <h4> {{ user_comment_amount["count"] }}</h4>
+        </th>
+        <th>
+            <h4> {{ user_data["reputation"] }}</h4>
+        </th>
+    </tr>
+</table>
+<br><br>
+
+{# listing user questions #}
+<table class="center">
+    <tr>
+        <th>ID of question</th>
+        <th>Title of question provided by user</th>
+        <th>Message of question provided by user</th>
+    </tr>
+    {% for user_question in user_questions %}
+        <tr>
+            <td>{{ user_question['question_id'] }}</td>
+            <td>{{ user_question['title'] }}</td>
+            <td>
+                <a href="
+                        {{ url_for("see_question",question_id = user_question['question_id'], view_add = True) }}">
+                    {{ user_question['message'] }} </a>
+
+            </td>
+        </tr>
+    {% endfor %}
+
+</table>
+<br><br>
+
+{# listing user answers #}
+<table class="center">
+    <tr>
+        <th>ID of answer</th>
+        <th>ID of answered question</th>
+        <th>Message of answer provided by user</th>
+    </tr>
+    {% for user_answer in user_answers %}
+        <tr>
+            <td>{{ user_answer['answer_id'] }}</td>
+            <td>{{user_answer['question_id'] }}</td>
+            <td>
+                <a href="
+                        {{ url_for("see_question",question_id = user_answer['question_id'], view_add = True) }}">
+                    {{ user_answer['message'] }} </a>
+
+            </td>
+        </tr>
+    {% endfor %}
+
+</table>
+<br><br>
+
+{# listing user comments #}
+<table class="center">
+    <tr>
+        <th>ID of comment</th>
+        <th>ID of commented question</th>
+        <th>Message of comment provided by user</th>
+    </tr>
+    {% for user_comment in user_comments %}
+        <tr>
+            <td>{{ user_comment['comment_id'] }}</td>
+            <td>{{user_comment['question_id'] }}</td>
+            <td>
+                <a href="
+                        {{ url_for("see_question",question_id = user_comment['question_id'], view_add = True) }}">
+                    {{ user_comment['message'] }} </a>
+
+            </td>
+        </tr>
+    {% endfor %}
+
+</table>
+<br><br>
+<button class="center" type="button"><a href="{{ url_for("index") }}">Back to main menu</a></button>
+
+</body>
+</html>

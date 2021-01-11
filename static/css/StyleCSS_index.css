@@ -6,6 +6,14 @@ h2 {
 
 }
 
+h3 {
+    color: #117b7c;
+    font-family: Arial;
+    font-size: 15px;
+    letter-spacing: 5px;
+
+}
+
 
 
 input[type="text"] {
@@ -55,6 +63,19 @@ button:hover {
     background-color: #00e6e6;
 }
 
+input[type = "submit"] {
+    padding: 10px;
+    font-family: Arial;
+    font-style: italic;
+    font-size: 12px;
+    background-color: #A5D6D9;
+}
+
+input:hover[type = "submit"] {
+    background-color: #00e6e6;
+}
+
+
 h1{
     font-size: 7rem;
     text-align: center;
@@ -83,25 +104,4 @@ h1{
     padding-left: 5%;
     padding-bottom: 2px;
     background-color:#5cd6d6;
-}
-
-#hello_user {
-    font-size: 2rem;
-    text-align: left;
-    color: blue;
-
-}
-
-#hello_guest {
-    font-size: 1rem;
-    text-align: left;
-    color: grey;
-}
-
-.user_True {
-
-}
-
-.user_False {
-    display: none;
 }

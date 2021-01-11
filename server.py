@@ -1,6 +1,5 @@
-import csv, data_manager
+import csv, data_manager, bcrypt
 from datetime import datetime
-import bcrypt
 
 QUESTION_LABEL_FOR_ID = "id"
 QUESTION_LABEL_FOR_ANSWERS = "question_id"
@@ -81,21 +80,41 @@ def get_default_answer():
 
 # AM2 - updated to SQL
 def add_new_question(question):
-    questions, answers = get_user_data()
-    questions.append(question)  # zwraca wartości, .keys() zwraca klucze
-    print(questions)
-    # export_data(questions, fieldnames=Qheaders)  # zapis do pliku CSV
+    # questions, answers = get_user_data()
+    # questions.append(question)  # zwraca wartości, .keys() zwraca klucze
+    # print(questions)
+    # # export_data(questions, fieldnames=Qheaders)  # zapis do pliku CSV
 
     data_manager.add_question(question)
 
 
+def get_last_question_id():
+    last_id = data_manager.last_question_id()
+    return last_id['id']
+
+
+def update_user_question_table(user_id, question_id):
+    data_manager.update_user_question(user_id, question_id)
+    print("Table updated succesfully")
+
+
 # AM2 -SQL UPDATED
 def add_new_answer_to_file(answer):
-    questions, answers = get_user_data()
-    answers.append(answer)
-    print("Added answer: ", answer)
-    # export_data(answers, fieldnames=Aheaders, filename='./sample_data/testowe_odpowiedzi.csv')
+    # questions, answers = get_user_data()
+    # answers.append(answer)
+    # print("Added answer: ", answer)
+    # # export_data(answers, fieldnames=Aheaders, filename='./sample_data/testowe_odpowiedzi.csv')
     data_manager.add_answer(answer)
+
+
+def get_last_answer_id():
+    last_id = data_manager.last_answer_id()
+    return last_id['id']
+
+
+def update_user_answer_table(user_id, answer_id, question_id):
+    data_manager.update_user_answer(user_id, answer_id, question_id)
+    print("Table updated succesfully")
 
 
 # AM2 - updated to SQL
@@ -211,13 +230,17 @@ def delete_answer(answer_id, question_id):
     data_manager.delete_answer(answer_id)
 
 
-def add_view(view):
-    return int(view) + 1
+def add_view(question_id):
+    return data_manager.update_view_number(question_id)
 
 
 # AM2 - updated to SQL
 def get_all_tags():
     return data_manager.get_tags()
+
+
+def get_question_tags(question_id):
+    return data_manager.get_tags_for_question(question_id)
 
 
 def get_tag_labels():
@@ -231,14 +254,26 @@ def get_tags_names(question_id):
             return tag["name"]
     return None
 
+
 def update_tag(tag):
     data_manager.update_tags(tag)
 
 
-def add_comments(comment,question_id,answer_id,user_email):  # to be updated for user data
+def add_comments(comment, question_id, answer_id):  # to be updated for user data
     new_comment = [(question_id), (answer_id), comment, get_submission_time()]
+    print("NOWYY", new_comment)
     data_manager.add_comment(new_comment)
-    add_new_comment_user(new_comment,user_email)
+
+
+def get_last_comment_id():
+    last_id = data_manager.last_comment_id()
+    return last_id['id']
+
+
+def update_user_comment_table(user_id, comment_id, question_id):
+    data_manager.update_user_comment(user_id, comment_id, question_id)
+    print("Table updated succesfully")
+
 
 def get_comments(question_id):
     all_comments = data_manager.get_comments()
@@ -248,88 +283,133 @@ def get_comments(question_id):
             comments_for_question.append(comment)
     return comments_for_question
 
-def delete_comment(question_id,answer_id, comment_id):
+
+def delete_comment(question_id, answer_id, comment_id):
     data_manager.delete_comment(comment_id)
-    print("Comment with id ",comment_id, "for answer",answer_id,"in question",question_id,"has been removed")
+    print("Comment with id ", comment_id, "for answer", answer_id, "in question", question_id, "has been removed")
 
-###########AM3
-def is_user_in_db(email):
-    user_data = data_manager.get_user_by_email(email)
-    if user_data:
-        return True
-    return False
 
-def check_user(login_email, given_password):
-    print("USER Verification => ",login_email)
+def add_user(email, password, register_date):
+    data_manager.add_user(email, password, register_date)
+    print("User succesfully added")
 
-    user_data = data_manager.get_user_by_email(login_email) #check if user with given email is in DB
-    #zapytanie SQL zwraca listę słowników - unikatowy email powoduje, że jest to lista z jednym elementem index= 0]
-    #print(user_data)
-    #print(type(user_data))
 
-    if user_data: #given user email exist in DataBase
-        user_password = user_data[0]['password']
-        valid = bcrypt.checkpw(given_password.encode(), user_password.encode()) #check given password - in DB passwrod not encode
+def is_user(email):
+    user = data_manager.is_user(email)
+    return user
 
-        if valid:
-            print("Haslo OK")
-            return user_data
-        else:
-            print("Haslo NOK")
-            return False
 
-    return False #given user email NOT exist in DataBase
+def get_user_id(email):
+    id = data_manager.user_id(email)
+    return id['id']
 
-def add_new_user(email, password):
-    add_user = {
-        "email": email,
-        "password":hash_password(password),
-       # "permission_level":1
-    }
 
-    data_manager.add_user_to_db(add_user)
-    print("New user:",add_user["email"]," has been added")
+def get_user_information():
+    data = data_manager.user_data()
+    return data
+
 
 def hash_password(password):
-    password = password.encode()  # b'password'
+    password = password.encode('utf-8')  # b'password'
     salt = bcrypt.gensalt()  # generate salt - provide unique passwords for each user
     user_password = bcrypt.hashpw(password, salt)  # generate unique passwords
-    return user_password.decode() #decode -  do DB encode password
+    return user_password.decode()  # decode - problem z zapisem do DB encode password
 
 
-def add_new_question_user(user_email,question_id):
-    user = data_manager.get_user_by_email(user_email)
-    user_id = user[0]["id"]
-    data_manager.add_user_question(user_id,question_id)
-    print("User: ",user_email," add new question with ID",question_id)
-
-def add_new_answer_user(user_email,answer_id):
-    user = data_manager.get_user_by_email(user_email)
-    user_id = user[0]["id"]
-    data_manager.add_user_answer(user_id,answer_id)
-    print("User: ",user_email," add new answer with ID",answer_id)
+def is_password_valid(email, password):
+    user_data = data_manager.is_user(email)
+    user_password = user_data[0]['password']
+    valid = bcrypt.checkpw(password.encode('utf-8'), user_password.encode('utf-8'))
+    if valid:
+        return True
+    else:
+        return False
 
 
-def get_comment_id(new_comment):
+def get_users_question_amount():
+    question_amount = data_manager.count_questions()
+    return question_amount
 
-    question_id = new_comment[0]
-    answer_id = new_comment[1]
-    comment = new_comment[2]
-    sent_time = new_comment[3] #format daty!! dorobic poeownianie czasowe tez
 
-    comments_for_question = get_comments(question_id)
-    for single_comment in comments_for_question:
-        print("DOROBIC!! + czas=> Porównanie: ", single_comment, "VS", new_comment)
-        if single_comment["question_id"] == int(question_id) and single_comment["answer_id"] == int(answer_id) and single_comment["message"] == comment: # and single_comment["submission_time"] == sent_time:
-            print("Comment ID =",single_comment["id"])
-            return single_comment["id"]
-    return None
+def get_users_answer_amount():
+    answer_amount = data_manager.count_answers()
+    return answer_amount
 
-def add_new_comment_user(new_comment,user_email):
-    user = data_manager.get_user_by_email(user_email)
-    user_id = user[0]["id"]
 
-    comment_id = get_comment_id(new_comment)
+def get_users_comment_amount():
+    comment_amount = data_manager.count_comments()
+    return comment_amount
 
-    data_manager.add_user_comment(user_id,comment_id)
-    print("User: ",user_email," add new comment with ID",comment_id)
+
+def get_search_question(question_to_search):
+    searched_question = data_manager.search_question(question_to_search)
+    return searched_question
+
+
+def get_authors(question_id): #return DICT q/a/c_id:author_email related with given question_id
+    question_author = data_manager.get_question_author(question_id) #return FETCHONE -> dictionary question_id:author_email
+    answers_authors = data_manager.get_answer_author(question_id) #return FETCHALL list of dictionaries answer_id:author_email
+    comments_authors = data_manager.get_comment_author(question_id) #return FETCHALL list of dictionaries comment_id:author_email
+    authors = [question_author,answers_authors,comments_authors]
+    return authors
+
+
+def get_answer_status(question_id):
+    return data_manager.get_answers_status(question_id)
+
+
+def update_answer_status(question_id, answer_id, answer_status):
+    print("Answer status updated: Q-", question_id, "A-", answer_id, "S-", answer_status)
+    return data_manager.set_answers_status(question_id, answer_id, answer_status)
+
+
+def get_questions_for_user(user_id):
+    questions_for_user = data_manager.questions_for_user(user_id)
+    return questions_for_user
+
+
+def get_answers_for_user(user_id):
+    answers_for_user = data_manager.answers_for_user(user_id)
+    return answers_for_user
+
+
+def get_comments_for_user(user_id):
+    comments_for_user = data_manager.comments_for_user(user_id)
+    return comments_for_user
+
+
+def update_user_reputation_by_answer(answer_id, vote):
+    # userID = data_manager.get_user_id_by_answer_id(answer_id)
+    # data_manager.set_user_reputation(user_reputation,userID['user_id'])
+    # 2ways to update_reputation:
+    if vote == "1":
+        reputation = 10;
+    elif vote == "-1":
+        reputation = -2;
+    data_manager.set_user_reputation_1querry(reputation, answer_id)
+    print("User reputation updated!")
+
+
+def update_answer_vote(answer_vote,answer_id):
+    print("Answer vote updated!")
+    return data_manager.set_answer_vote(answer_vote, answer_id)
+
+
+def update_user_reputation_by_question(question_id, vote):
+    if vote == "1":
+        reputation = 5;
+    elif vote == "-1":
+        reputation = -2;
+    data_manager.set_user_reputation_1querry_question(reputation, question_id)
+    print("User reputation updated!")
+
+
+def update_question_vote(answer_vote,question_id):
+    print("Question vote updated!")
+    return data_manager.set_question_vote(answer_vote, question_id)
+
+
+def get_questions_by_tag(tag_name):
+    return data_manager.get_questions_by_tag(tag_name)
+
+

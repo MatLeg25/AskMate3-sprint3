@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styleCSS_user_list.css') }}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+</head>
+<body>
+
+<h1>See users list below!</h1>
+<table class="center">
+    <tr>
+        <th><h3>User login</h3></th>
+        <th><h3>Date of register</h3></th>
+        <th><h3>Amount of questions</h3></th>
+        <th><h3>Amount of answers</h3></th>
+        <th><h3>Amount of comments</h3></th>
+        <th><h3>Reputation</h3></th>
+    </tr>
+    {% for user_data in users_data %}
+        <tr>
+            <th>
+                <button type="button" class = "center"><a href="{{ url_for("user_page", user_id = user_data["id"]) }}">
+                    <h4>{{ user_data["login"] }}</h4></a></button>
+            </th>
+            <th>
+                <h4>{{ user_data["registered"] }}</h4>
+            </th>
+            <th>
+                {% for user_question in user_questions %}
+                    {% if user_data["id"] == user_question["id"] %}
+                        <h4> {{ user_question["count"] }}</h4>
+                    {% endif %}
+                {% endfor %}
+            </th>
+            <th>
+                {% for user_answer in user_answers %}
+                    {% if user_data["id"] == user_answer["id"] %}
+                        <h4> {{ user_answer["count"] }}</h4>
+                    {% endif %}
+                {% endfor %}
+            </th>
+            <th>
+                {% for user_comment in user_comments %}
+                    {% if user_data["id"] == user_comment["id"] %}
+                        <h4> {{ user_comment["count"] }}</h4>
+                    {% endif %}
+                {% endfor %}
+            </th>
+            <th>
+                <h4> {{ user_data["reputation"] }} </h4>
+            </th>
+        </tr>
+    {% endfor %}
+</table>
+
+<br><br>
+
+<button class="center" type="button"><a href="{{ url_for("index") }}">Back to main menu</a></button>
+</body>
+</html>

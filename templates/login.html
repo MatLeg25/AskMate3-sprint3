@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleCSS_index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/StyleCSS_login.css') }}">
     <meta charset="UTF-8">
     <title>Login</title>
 </head>
 <body>
-
+        <a href = "{{ url_for('index') }}"><h1>AskMate2</h1></a>
     {% if register == "register" %}
+
 
         <form action="{{ url_for('register') }}" method="post">
         <label for="email">Email: </label>
@@ -15,13 +16,25 @@
         <label for="password">Password: </label>
         <input type="password" name="password" id="password" placeholder="Provide password...">
         <h3>Agree with terms of rules? </h3>
-        <div>
-        <input type="radio" id="Yes" name="Rules" value="Yes">
-        <label for="Yes">Yes</label>
-        <input type="radio" id="No" name="Rules" value="No" checked>
-        <label for="No">No</label>
+        <div id="register_rules">
+        <input class = "radio-input" type="radio" id="Yes" name="Rules" value="Yes">
+        <label class = "radio-label" for="Yes">Yes</label>
+            <br />
+        <input class = "radio-input"type="radio" id="No" name="Rules" value="No" checked>
+        <label class = "radio-label" for="No">No</label>
         </div>
+            <br />
         <button type="submit">Register</button>
+        </form>
+
+    {% elif register == "login" %}
+
+        <form action="{{ url_for('login') }}" method="post">
+        <label for="email">Email: </label>
+        <input type="email" name="email" id="email" placeholder="Provide email..."><br>
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" placeholder="Provide password..."><br>
+        <button type="submit">Login</button>
         </form>
 
     {% elif register == "is user" %}
@@ -35,53 +48,24 @@
         <h3>Welcome in AskMate, our new user!</h3>
         <button type="submit"><a href="{{ url_for("index") }}">Back to main menu</a></button>
 
-    {% elif register == "register_bad" %}
-        <h3>The given data is incorrect! Try again.</h3>
-        <h5 style="color:Tomato;">Hints: email must be unique, password should be at least 3 characters long.</h5>
-        <form action="{{ url_for('register') }}" method="post">
-        <label for="email">Email: </label>
-        <input type="email" name="email" id="email" placeholder="Provide email...">
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password" placeholder="Provide password...">
-        <h3>Agree with terms of rules? </h3>
-        <div>
-        <input type="radio" id="Yes" name="Rules" value="Yes">
-        <label for="Yes">Yes</label>
-        <input type="radio" id="No" name="Rules" value="No" checked>
-        <label for="No">No</label>
-        </div>
-        <button type="submit">Register</button>
-        </form>
-
-
-    {% elif register == "login" %}
-
-        <form action="{{ url_for('login') }}" method="post">
-        <label for="email">Email: </label>
-        <input type="email" name="email" id="email" placeholder="Provide email...">
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password" placeholder="Provide password...">
-        <button type="submit">Login</button>
-        </form>
 
     {% elif register == "logged" %}
 
-        <h3> Hello! Welcome in AskMate! </h3>
+        <h3> Hello! Welcome in AskMate dear {{ user }}! </h3>
         <button type="submit"><a href="{{ url_for("index") }}">Back to main menu</a></button>
 
-    {% elif register == "login_bad" %}
+    {% elif register == "no_user" %}
 
-        <h3>The given data is incorrect! Try again.</h3>
+        <h3> There is no user like this </h3>
+        <button type="submit"><a href="{{ url_for("index") }}">Back to main menu</a></button>
 
-        <form action="{{ url_for('login') }}" method="post">
-        <label for="email">Email: </label>
-        <input type="email" name="email" id="email" placeholder="Provide email...">
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password" placeholder="Provide password...">
-        <button type="submit">Login</button>
-        </form>
+    {% elif register == "wrong_data" %}
+
+        <h3> Wrong login data! </h3>
+        <button type="submit"><a href="{{ url_for("index") }}">Back to main menu</a></button>
+
+
 
     {% endif %}
-
 </body>
 </html>
