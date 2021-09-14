@@ -83,6 +83,15 @@
     - The page is accessible when I'm not logged in
 
 
+
+## Home page:
+![askmate1](https://user-images.githubusercontent.com/70913892/133313473-0a91bb68-8ef4-4032-9665-9ef90a3b8c20.PNG)
+
+## Question page
+![askmate2](https://user-images.githubusercontent.com/70913892/133313491-23e53be3-e1b4-498c-866c-6c17148c32b1.png)
+
+
+
 ## Technologies:
 - Flask
 - PostgreSQL
